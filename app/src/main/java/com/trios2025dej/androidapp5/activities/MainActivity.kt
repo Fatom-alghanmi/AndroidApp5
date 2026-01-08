@@ -1,6 +1,6 @@
 package com.trios2025dej.activities
 
-import android.media.MediaPlayer
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PodcastAdapter
-    private var mediaPlayer: MediaPlayer? = null
     private lateinit var searchInput: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +35,6 @@ class MainActivity : AppCompatActivity() {
 
         searchInput = findViewById(R.id.searchInput)
 
-        // Search-as-you-type
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -56,57 +54,23 @@ class MainActivity : AppCompatActivity() {
         val api = ApiClient.retrofit.create(PodcastApi::class.java)
         api.searchPodcasts(BuildConfig.LISTEN_NOTES_API_KEY, query)
             .enqueue(object : Callback<SearchResponse> {
-                override fun onResponse(
-                    call: Call<SearchResponse>,
-                    response: Response<SearchResponse>
-                ) {
-                    val results = response.body()?.results ?: emptyList()
+                override fun onResponse(call: Call<SearchResponse>, response: Response<SearchResponse>) {
+                    val results = response.body()?.results?.filterNotNull() ?: emptyList()
                     if (results.isEmpty()) {
-                        Toast.makeText(this@MainActivity, "No podcasts found", Toast.LENGTH_SHORT)
-                            .show()
+                        Toast.makeText(this@MainActivity, "No podcasts found", Toast.LENGTH_SHORT).show()
                     }
 
-                    // Create adapter with Play functionality
                     adapter = PodcastAdapter(results) { podcast ->
-                        playPodcast(podcast.audio) // audio URL
+                        val intent = Intent(this@MainActivity, PodcastDetailActivity::class.java)
+                        intent.putExtra("podcast", podcast)
+                        startActivity(intent)
                     }
                     recyclerView.adapter = adapter
                 }
 
                 override fun onFailure(call: Call<SearchResponse>, t: Throwable) {
-                    Toast.makeText(this@MainActivity, "Error loading podcasts", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(this@MainActivity, "Error loading podcasts", Toast.LENGTH_SHORT).show()
                 }
             })
-    }
-
-    private fun playPodcast(url: String) {
-        // Stop previous playback if any
-        mediaPlayer?.release()
-        mediaPlayer = MediaPlayer().apply {
-            try {
-                setDataSource(url)
-                prepareAsync()
-                setOnPreparedListener { start() }
-                setOnCompletionListener {
-                    Toast.makeText(this@MainActivity, "Playback finished", Toast.LENGTH_SHORT)
-                        .show()
-                }
-                setOnErrorListener { _, _, _ ->
-                    Toast.makeText(this@MainActivity, "Error playing audio", Toast.LENGTH_SHORT)
-                        .show()
-                    true
-                }
-            } catch (e: Exception) {
-                Toast.makeText(this@MainActivity, "Cannot play this audio", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mediaPlayer?.release()
-        mediaPlayer = null
     }
 }
