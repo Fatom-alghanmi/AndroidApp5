@@ -18,7 +18,7 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         // API key for Listen Notes
-        buildConfigField("String", "LISTEN_NOTES_API_KEY", "\"YOUR_API_KEY_HERE\"")
+        buildConfigField("String", "LISTEN_NOTES_API_KEY", "\"55628cdd04414bd384edb6a141d730ad\"")
     }
 
     buildTypes {
