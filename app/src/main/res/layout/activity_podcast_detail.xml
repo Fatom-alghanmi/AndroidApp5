@@ -4,7 +4,8 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/backgroundColor"> <!-- dark background -->
 
     <!-- Toolbar with back arrow -->
     <androidx.appcompat.widget.Toolbar
@@ -12,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:titleTextColor="@android:color/white" />
+        app:titleTextColor="@color/textPrimary" /> <!-- title text changes color -->
 
     <!-- Podcast image -->
     <ImageView
@@ -30,7 +31,8 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingBottom="8dp"
+        android:textColor="@color/textPrimary" /> <!-- title color -->
 
     <!-- Subscribe / Unsubscribe button -->
     <Button
@@ -38,7 +40,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Subscribe"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/buttonColor"
+        android:textColor="@android:color/white" />
 
     <!-- Play / Pause button -->
     <Button
@@ -46,7 +50,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Play"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/buttonColor"
+        android:textColor="@android:color/white" />
 
     <!-- Progress bar for episode loading -->
     <ProgressBar
@@ -73,6 +79,7 @@
         android:id="@+id/episodeRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:background="@color/backgroundColor" /> <!-- ensure list uses dark background -->
 
 </LinearLayout>
