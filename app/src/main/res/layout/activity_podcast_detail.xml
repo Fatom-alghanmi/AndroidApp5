@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <!-- Toolbar with back arrow -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:titleTextColor="@android:color/white" />
+
+    <!-- Podcast image -->
+    <ImageView
+        android:id="@+id/detailImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="8dp" />
+
+    <!-- Podcast title -->
+    <TextView
+        android:id="@+id/detailTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp" />
+
+    <!-- Subscribe / Unsubscribe button -->
+    <Button
+        android:id="@+id/subscribeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subscribe"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Play / Pause button -->
+    <Button
+        android:id="@+id/playPauseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Play"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Progress bar for episode loading -->
+    <ProgressBar
+        android:id="@+id/loadingProgress"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Progress bar for audio loading -->
+    <ProgressBar
+        android:id="@+id/audioLoadingProgress"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Episode list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/episodeRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>
