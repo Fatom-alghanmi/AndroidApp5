@@ -4,16 +4,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/backgroundColor"> <!-- dark background -->
+    android:background="@color/backgroundColor"
+    android:padding="16dp">
 
     <!-- Toolbar with back arrow -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        app:titleTextColor="@color/textPrimary" /> <!-- title text changes color -->
+        android:background="@color/primaryColor"
+        app:titleTextColor="@color/toolbarTextColor" />
 
     <!-- Podcast image -->
     <ImageView
@@ -28,31 +28,31 @@
         android:id="@+id/detailTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/textColorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
         android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:textColor="@color/textPrimary" /> <!-- title color -->
+        android:paddingBottom="8dp" />
 
     <!-- Subscribe / Unsubscribe button -->
     <Button
         android:id="@+id/subscribeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Subscribe"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/buttonColor"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/buttonTextColor"
+        android:text="Subscribe"
+        android:layout_marginBottom="8dp" />
 
     <!-- Play / Pause button -->
     <Button
         android:id="@+id/playPauseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play"
-        android:layout_marginBottom="8dp"
         android:backgroundTint="@color/buttonColor"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/buttonTextColor"
+        android:text="Play"
+        android:layout_marginBottom="8dp" />
 
     <!-- Progress bar for episode loading -->
     <ProgressBar
@@ -60,8 +60,9 @@
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:visibility="gone"
         android:indeterminate="true"
+        android:visibility="gone"
+        android:progressTint="@color/progressColor"
         android:layout_marginBottom="8dp"/>
 
     <!-- Progress bar for audio loading -->
@@ -70,8 +71,9 @@
         style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:visibility="gone"
         android:indeterminate="true"
+        android:visibility="gone"
+        android:progressTint="@color/progressColor"
         android:layout_marginBottom="8dp"/>
 
     <!-- Episode list -->
@@ -79,7 +81,6 @@
         android:id="@+id/episodeRecycler"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@color/backgroundColor" /> <!-- ensure list uses dark background -->
+        android:layout_weight="1" />
 
 </LinearLayout>
