@@ -92,11 +92,13 @@ class PodcastDetailActivity : AppCompatActivity() {
                 SubscriptionManager.unsubscribe(this, podcast.id)
                 Toast.makeText(this, "Unsubscribed", Toast.LENGTH_SHORT).show()
             } else {
-                SubscriptionManager.subscribe(this, podcast.id)
+                SubscriptionManager.subscribe(this, podcast) // pass full Podcast object
                 Toast.makeText(this, "Subscribed", Toast.LENGTH_SHORT).show()
             }
             updateSubscribeButton()
         }
+
+
 
         // Play / Pause button
         playPauseButton.setOnClickListener { togglePlayPause() }
@@ -118,66 +120,98 @@ class PodcastDetailActivity : AppCompatActivity() {
         val api = ApiClient.retrofit.create(PodcastApi::class.java)
         api.getPodcastDetails(BuildConfig.LISTEN_NOTES_API_KEY, podcastId)
             .enqueue(object : Callback<PodcastDetailResponse> {
-                override fun onResponse(call: Call<PodcastDetailResponse>, response: Response<PodcastDetailResponse>) {
+                override fun onResponse(
+                    call: Call<PodcastDetailResponse>,
+                    response: Response<PodcastDetailResponse>
+                ) {
                     showLoading(false)
                     val episodes = response.body()?.episodes ?: emptyList()
                     if (episodes.isEmpty()) {
-                        Toast.makeText(this@PodcastDetailActivity, "No episodes found", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@PodcastDetailActivity,
+                            "No episodes found",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return
                     }
 
                     recyclerView.adapter = EpisodeListAdapter(episodes) { episode ->
                         episode.audio?.let { url -> startNewAudio(url) }
-                            ?: Toast.makeText(this@PodcastDetailActivity, "No audio for this episode", Toast.LENGTH_SHORT).show()
+                            ?: Toast.makeText(
+                                this@PodcastDetailActivity,
+                                "No audio for this episode",
+                                Toast.LENGTH_SHORT
+                            ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<PodcastDetailResponse>, t: Throwable) {
                     showLoading(false)
-                    Toast.makeText(this@PodcastDetailActivity, "Failed to load episodes: ${t.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this@PodcastDetailActivity,
+                        "Failed to load episodes: ${t.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             })
     }
 
     private fun startNewAudio(url: String) {
-        if (currentAudioUrl == url) {
-            togglePlayPause()
-            return
-        }
+        try {
+            if (currentAudioUrl == url) {
+                togglePlayPause()
+                return
+            }
 
-        releaseMediaPlayer()
-        showAudioLoading(true)
+            releaseMediaPlayer()
+            showAudioLoading(true)
 
-        mediaPlayer = MediaPlayer().apply {
-            try {
-                setDataSource(url)
-                prepareAsync()
+            mediaPlayer = MediaPlayer().apply {
                 setOnPreparedListener {
                     showAudioLoading(false)
                     start()
                     this@PodcastDetailActivity.isPlaying = true
                     playPauseButton.text = "Pause"
                     currentAudioUrl = url
-                    Toast.makeText(this@PodcastDetailActivity, "Playing episode", Toast.LENGTH_SHORT).show()
                 }
                 setOnCompletionListener {
                     this@PodcastDetailActivity.isPlaying = false
                     playPauseButton.text = "Play"
                     currentAudioUrl = null
-                    Toast.makeText(this@PodcastDetailActivity, "Playback finished", Toast.LENGTH_SHORT).show()
                 }
                 setOnErrorListener { _, _, _ ->
                     showAudioLoading(false)
                     this@PodcastDetailActivity.isPlaying = false
                     playPauseButton.text = "Play"
                     currentAudioUrl = null
-                    Toast.makeText(this@PodcastDetailActivity, "Error playing audio", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        this@PodcastDetailActivity,
+                        "Error playing audio",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     true
                 }
-            } catch (e: Exception) {
-                showAudioLoading(false)
-                Toast.makeText(this@PodcastDetailActivity, "Cannot play this audio: ${e.message}", Toast.LENGTH_LONG).show()
+
+                try {
+                    setDataSource(url)
+                    prepareAsync()
+                } catch (e: Exception) {
+                    showAudioLoading(false)
+                    release()
+                    mediaPlayer = null
+                    Toast.makeText(
+                        this@PodcastDetailActivity,
+                        "Cannot play this audio",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "Unexpected error: ${e.message}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -194,7 +228,11 @@ class PodcastDetailActivity : AppCompatActivity() {
                     playPauseButton.text = "Pause"
                 }
             } catch (e: IllegalStateException) {
-                Toast.makeText(this, "Cannot control playback right now", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Cannot control playback right now",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         } ?: Toast.makeText(this, "No audio selected", Toast.LENGTH_SHORT).show()
     }
